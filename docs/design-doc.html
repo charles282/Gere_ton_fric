@@ -1,0 +1,903 @@
+<title>Grand Livre</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --paper:#F7F8F6;
+  --paper-raised:#FFFFFF;
+  --ink:#1B1F1D;
+  --ink-soft:#5C6660;
+  --line:#DCE1DD;
+  --line-strong:#B9C2BC;
+  --accent:#1F4B3F;
+  --accent-soft:#E4ECE8;
+  --accent-tint:#1F4B3F0d;
+  --warn:#B5533C;
+  --warn-soft:#F4E5E0;
+  --code-bg:#EEF1EE;
+  --shadow: 0 1px 2px rgba(27,31,29,0.06), 0 8px 24px rgba(27,31,29,0.05);
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141815;
+    --paper-raised:#1B211D;
+    --ink:#EAEEEA;
+    --ink-soft:#9AA6A0;
+    --line:#2B332E;
+    --line-strong:#3B463F;
+    --accent:#6FBBA0;
+    --accent-soft:#1E2C26;
+    --accent-tint:#6FBBA014;
+    --warn:#E08A6E;
+    --warn-soft:#2E211D;
+    --code-bg:#1E2420;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+}
+
+:root[data-theme="dark"]{
+  --paper:#141815;
+  --paper-raised:#1B211D;
+  --ink:#EAEEEA;
+  --ink-soft:#9AA6A0;
+  --line:#2B332E;
+  --line-strong:#3B463F;
+  --accent:#6FBBA0;
+  --accent-soft:#1E2C26;
+  --accent-tint:#6FBBA014;
+  --warn:#E08A6E;
+  --warn-soft:#2E211D;
+  --code-bg:#1E2420;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+}
+
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+}
+
+::selection{background:var(--accent-soft);color:var(--accent);}
+
+.shell{
+  display:grid;
+  grid-template-columns: 280px minmax(0,1fr);
+  max-width:1320px;
+  margin:0 auto;
+}
+
+/* ---------- Sidebar ---------- */
+.toc{
+  position:sticky;
+  top:0;
+  align-self:start;
+  height:100vh;
+  overflow-y:auto;
+  padding:2.5rem 1.75rem 2.5rem 2rem;
+  border-right:1px solid var(--line);
+}
+.toc-brand{
+  display:flex;
+  flex-direction:column;
+  gap:.15rem;
+  margin-bottom:2.25rem;
+  padding-bottom:1.25rem;
+  border-bottom:1px solid var(--line);
+}
+.toc-brand .mark{
+  font-family:'Source Serif 4', Georgia, serif;
+  font-weight:700;
+  font-size:1.15rem;
+  letter-spacing:-0.01em;
+  color:var(--accent);
+}
+.toc-brand .sub{
+  font-size:.72rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.toc nav{display:flex; flex-direction:column; gap:.1rem;}
+.toc-group{margin-bottom:1.1rem;}
+.toc-group-label{
+  font-size:.68rem;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin:0 0 .4rem .6rem;
+}
+.toc a{
+  display:block;
+  padding:.38rem .6rem;
+  border-radius:6px;
+  color:var(--ink-soft);
+  text-decoration:none;
+  font-size:.87rem;
+  transition:background .15s ease, color .15s ease;
+}
+.toc a:hover{background:var(--accent-tint); color:var(--ink);}
+.toc a:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+/* ---------- Main content ---------- */
+main{padding:3.5rem 3rem 6rem; min-width:0;}
+.doc-header{margin-bottom:3.5rem; max-width:62ch;}
+.eyebrow{
+  font-size:.75rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-weight:600;
+  margin-bottom:.9rem;
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+}
+.eyebrow::before{content:""; width:24px; height:1px; background:var(--accent);}
+h1.doc-title{
+  font-family:'Source Serif 4', Georgia, serif;
+  font-weight:700;
+  font-size:clamp(2.1rem, 3.4vw, 2.75rem);
+  line-height:1.12;
+  letter-spacing:-0.015em;
+  text-wrap:balance;
+  margin:0 0 1rem;
+}
+.doc-sub{
+  color:var(--ink-soft);
+  font-size:1.05rem;
+  line-height:1.6;
+  text-wrap:balance;
+}
+.meta-row{
+  display:flex;
+  gap:1.5rem;
+  flex-wrap:wrap;
+  margin-top:1.5rem;
+  padding-top:1.25rem;
+  border-top:1px solid var(--line);
+  font-family:'JetBrains Mono', ui-monospace, monospace;
+  font-size:.78rem;
+  color:var(--ink-soft);
+}
+.meta-row strong{color:var(--ink); font-weight:600;}
+
+section{max-width:65ch; margin-bottom:3.75rem; scroll-margin-top:2rem;}
+section.wide{max-width:none;}
+section .section-number{
+  font-family:'JetBrains Mono', monospace;
+  font-size:.78rem;
+  color:var(--accent);
+  font-weight:600;
+  margin-bottom:.5rem;
+  display:block;
+}
+h2{
+  font-family:'Source Serif 4', Georgia, serif;
+  font-weight:600;
+  font-size:1.6rem;
+  letter-spacing:-0.01em;
+  text-wrap:balance;
+  margin:0 0 1.1rem;
+  padding-top:.25rem;
+}
+h3{
+  font-family:'Inter', sans-serif;
+  font-weight:600;
+  font-size:1.05rem;
+  margin:1.9rem 0 .75rem;
+  color:var(--ink);
+}
+h3 .tag{
+  font-family:'JetBrains Mono', monospace;
+  font-size:.7rem;
+  font-weight:500;
+  color:var(--ink-soft);
+  margin-left:.5rem;
+}
+p{margin:0 0 1rem; color:var(--ink);}
+p.lead{font-size:1.05rem; color:var(--ink-soft);}
+strong{font-weight:600;}
+ul,ol{margin:0 0 1.1rem; padding-left:1.3rem;}
+li{margin-bottom:.45rem;}
+li::marker{color:var(--accent); font-weight:600;}
+a.inline-link{color:var(--accent); text-decoration-color: var(--line-strong); text-underline-offset:2px;}
+
+.callout{
+  background:var(--accent-soft);
+  border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius:10px;
+  padding:1.1rem 1.3rem;
+  margin:1.2rem 0;
+  font-size:.92rem;
+}
+.callout strong{color:var(--accent);}
+.callout.warn{
+  background:var(--warn-soft);
+  border-color:color-mix(in srgb, var(--warn) 30%, transparent);
+}
+.callout.warn strong{color:var(--warn);}
+
+/* ---------- Cards / grids ---------- */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+  gap:1rem;
+  margin:1.4rem 0 1.8rem;
+}
+.card{
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:1.25rem 1.35rem;
+  box-shadow:var(--shadow);
+}
+.card h4{
+  font-size:.95rem;
+  font-weight:600;
+  margin:0 0 .4rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.card p{font-size:.87rem; color:var(--ink-soft); margin:0;}
+.card .badge{
+  font-family:'JetBrains Mono', monospace;
+  font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  padding:.15rem .45rem;
+  border-radius:5px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-weight:600;
+}
+.card .badge.future{background:var(--warn-soft); color:var(--warn);}
+
+/* ---------- Tables ---------- */
+.table-wrap{overflow-x:auto; margin:1.2rem 0 1.8rem; border:1px solid var(--line); border-radius:10px;}
+table{width:100%; border-collapse:collapse; font-size:.87rem; min-width:520px;}
+thead th{
+  text-align:left;
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--ink-soft);
+  font-weight:600;
+  padding:.75rem .9rem;
+  background:var(--accent-tint);
+  border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+tbody td{
+  padding:.7rem .9rem;
+  border-bottom:1px solid var(--line);
+  vertical-align:top;
+  color:var(--ink);
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--accent-tint);}
+td.mono, th.mono{font-family:'JetBrains Mono', monospace; font-size:.8rem;}
+td .muted{color:var(--ink-soft); font-size:.8rem;}
+
+/* ---------- Entity / schema blocks ---------- */
+.schema-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1rem;
+  margin:1.3rem 0 1.8rem;
+}
+.entity{
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.entity-head{
+  background:var(--accent);
+  color:var(--paper);
+  padding:.6rem .9rem;
+  font-family:'JetBrains Mono', monospace;
+  font-size:.82rem;
+  font-weight:600;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.entity-head span.n{opacity:.75; font-weight:400; font-size:.7rem;}
+.entity ul{list-style:none; margin:0; padding:0;}
+.entity li{
+  margin:0;
+  padding:.5rem .9rem;
+  border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono', monospace;
+  font-size:.78rem;
+  display:flex;
+  justify-content:space-between;
+  gap:.5rem;
+}
+.entity li:last-child{border-bottom:none;}
+.entity li .field-name{color:var(--ink);}
+.entity li .field-type{color:var(--ink-soft);}
+.entity li.pk .field-name::before{content:"PK "; color:var(--accent); font-weight:700;}
+.entity li.fk .field-name::before{content:"FK "; color:var(--warn); font-weight:700;}
+
+/* ---------- Roadmap ---------- */
+.phase{
+  border-left:2px solid var(--line);
+  padding:0 0 2.2rem 1.6rem;
+  position:relative;
+  max-width:none;
+}
+.phase:last-child{padding-bottom:0;}
+.phase::before{
+  content:"";
+  position:absolute;
+  left:-6.5px;
+  top:.35rem;
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  background:var(--paper);
+  border:2px solid var(--accent);
+}
+.phase-head{
+  display:flex;
+  align-items:baseline;
+  gap:.75rem;
+  flex-wrap:wrap;
+  margin-bottom:.5rem;
+}
+.phase-head h3{margin:0; font-size:1.15rem; font-family:'Source Serif 4',serif; font-weight:600;}
+.phase-tag{
+  font-family:'JetBrains Mono', monospace;
+  font-size:.7rem;
+  color:var(--ink-soft);
+  background:var(--code-bg);
+  padding:.15rem .5rem;
+  border-radius:5px;
+}
+.phase p{max-width:62ch;}
+.phase ul{max-width:62ch;}
+
+/* ---------- Stack diagram ---------- */
+.stack{
+  display:flex;
+  flex-direction:column;
+  gap:.55rem;
+  margin:1.3rem 0 1.8rem;
+  max-width:640px;
+}
+.stack-layer{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:1rem;
+  align-items:center;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:.85rem 1.1rem;
+  box-shadow:var(--shadow);
+}
+.stack-layer .layer-label{
+  font-family:'JetBrains Mono', monospace;
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color:var(--accent);
+  font-weight:600;
+}
+.stack-layer .layer-body{font-size:.87rem;}
+.stack-layer .layer-body .tech{font-weight:600;}
+.stack-layer .layer-body .why{color:var(--ink-soft); font-size:.82rem; display:block; margin-top:.15rem;}
+
+code.inline{
+  font-family:'JetBrains Mono', monospace;
+  font-size:.85em;
+  background:var(--code-bg);
+  padding:.1em .4em;
+  border-radius:4px;
+}
+
+hr.sep{border:none; border-top:1px solid var(--line); margin:0 0 3.75rem;}
+
+footer{
+  max-width:65ch;
+  padding-top:2rem;
+  border-top:1px solid var(--line);
+  color:var(--ink-soft);
+  font-size:.82rem;
+}
+
+@media (max-width: 900px){
+  .shell{grid-template-columns:1fr;}
+  .toc{position:relative; height:auto; border-right:none; border-bottom:1px solid var(--line);}
+  main{padding:2.5rem 1.5rem 4rem;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;}
+}
+</style>
+
+<div class="shell">
+  <aside class="toc">
+    <div class="toc-brand">
+      <span class="mark">Grand Livre</span>
+      <span class="sub">Document de conception</span>
+    </div>
+    <nav>
+      <div class="toc-group">
+        <p class="toc-group-label">Cadrage</p>
+        <a href="#vision">Vision & périmètre</a>
+        <a href="#personas">Personas & usages</a>
+      </div>
+      <div class="toc-group">
+        <p class="toc-group-label">Fonctionnel</p>
+        <a href="#fonctionnalites">Fonctionnalités</a>
+        <a href="#donnees">Modèle de données</a>
+      </div>
+      <div class="toc-group">
+        <p class="toc-group-label">Technique</p>
+        <a href="#architecture">Architecture</a>
+        <a href="#stack">Stack technique</a>
+        <a href="#banque">Connexion bancaire</a>
+        <a href="#securite">Sécurité & conformité</a>
+      </div>
+      <div class="toc-group">
+        <p class="toc-group-label">Exécution</p>
+        <a href="#roadmap">Roadmap par phases</a>
+        <a href="#decisions">Décisions ouvertes</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <p class="eyebrow">Application de gestion financière personnelle</p>
+      <h1 class="doc-title">Grand Livre — Document de conception</h1>
+      <p class="doc-sub">Spécification fonctionnelle et technique de bout en bout : d'un outil de suivi personnel à une plateforme multi-utilisateurs avec agrégation bancaire.</p>
+      <div class="meta-row">
+        <span>Statut : <strong>Brouillon de travail</strong></span>
+        <span>Version : <strong>0.1</strong></span>
+        <span>Dernière mise à jour : <strong>31 août 2026</strong></span>
+      </div>
+    </header>
+
+    <section id="vision">
+      <span class="section-number">01</span>
+      <h2>Vision & périmètre</h2>
+      <p class="lead">Une application qui donne une vision claire et actionnable de l'argent : ce qui rentre, ce qui sort, ce qui reste dans les budgets — sans friction de saisie.</p>
+      <p>Le projet démarre comme un outil <strong>personnel</strong>, mono-utilisateur, avec saisie manuelle des transactions. L'architecture est conçue dès le départ pour supporter plusieurs utilisateurs indépendants (comptes séparés, données isolées) et l'agrégation bancaire automatique — ces deux capacités arrivent en phase 2 et 3, mais ne doivent jamais nécessiter une réécriture du cœur du système.</p>
+
+      <div class="callout">
+        <strong>Principe directeur.</strong> Construire le MVP comme si le multi-utilisateur existait déjà (un <code class="inline">user_id</code> partout, dès le premier schéma), mais ne livrer que les écrans et flux nécessaires à un seul utilisateur au départ. Ça évite la migration douloureuse plus tard sans ralentir l'itération initiale.
+      </div>
+
+      <h3>Ce que l'application n'est pas</h3>
+      <ul>
+        <li>Pas un outil de trading ou de suivi d'investissements boursiers en temps réel (peut venir bien plus tard, hors périmètre initial).</li>
+        <li>Pas un outil de facturation ou de comptabilité d'entreprise (pas de TVA, pas de factures clients).</li>
+        <li>Pas un comparateur de produits bancaires.</li>
+      </ul>
+    </section>
+
+    <section id="personas">
+      <span class="section-number">02</span>
+      <h2>Personas & usages</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4>Vous, aujourd'hui <span class="badge">MVP</span></h4>
+          <p>Utilisateur unique. Veut saisir ou importer ses transactions, les catégoriser, suivre un budget mensuel, et voir où part l'argent en un coup d'œil.</p>
+        </div>
+        <div class="card">
+          <h4>Foyer / couple <span class="badge future">Phase 2</span></h4>
+          <p>Deux comptes liés, certaines transactions et budgets partagés, d'autres privés. Besoin de voir une vue consolidée du foyer.</p>
+        </div>
+        <div class="card">
+          <h4>Utilisateur indépendant <span class="badge future">Phase 2</span></h4>
+          <p>Inscription autonome, données totalement isolées des autres utilisateurs. Le produit devient utilisable par n'importe qui.</p>
+        </div>
+      </div>
+
+      <h3>Parcours clé (MVP)</h3>
+      <ol>
+        <li>L'utilisateur ouvre l'app et voit un tableau de bord : solde global, dépenses du mois par catégorie, budgets en cours.</li>
+        <li>Il ajoute une transaction (montant, catégorie, date, note) en moins de 10 secondes.</li>
+        <li>Il consulte l'historique, filtre par catégorie ou période.</li>
+        <li>Il définit un budget mensuel par catégorie et reçoit un signal visuel s'il l'approche ou le dépasse.</li>
+      </ol>
+    </section>
+
+    <section id="fonctionnalites" class="wide">
+      <span class="section-number">03</span>
+      <h2>Fonctionnalités</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fonctionnalité</th>
+              <th>Description</th>
+              <th class="mono">Phase</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Transactions manuelles</strong></td>
+              <td>Créer, modifier, supprimer une transaction (dépense/revenu), avec montant, catégorie, compte, date, note, pièce jointe optionnelle.</td>
+              <td class="mono">MVP</td>
+            </tr>
+            <tr>
+              <td><strong>Catégories</strong></td>
+              <td>Catégories et sous-catégories personnalisables, avec un jeu de catégories par défaut (Logement, Alimentation, Transport, Loisirs, Santé, Revenus…).</td>
+              <td class="mono">MVP</td>
+            </tr>
+            <tr>
+              <td><strong>Comptes multiples</strong></td>
+              <td>Suivre plusieurs comptes (courant, épargne, espèces) avec un solde par compte et un solde consolidé.</td>
+              <td class="mono">MVP</td>
+            </tr>
+            <tr>
+              <td><strong>Budgets par catégorie</strong></td>
+              <td>Définir une limite mensuelle par catégorie, visualiser la consommation en temps réel, alerte au seuil de 80/100 %.</td>
+              <td class="mono">MVP</td>
+            </tr>
+            <tr>
+              <td><strong>Tableau de bord & rapports</strong></td>
+              <td>Vue synthétique du mois, tendances sur 3/6/12 mois, répartition par catégorie, comparaison mois à mois.</td>
+              <td class="mono">MVP</td>
+            </tr>
+            <tr>
+              <td><strong>Transactions récurrentes</strong></td>
+              <td>Modéliser les revenus/dépenses fixes (loyer, abonnements, salaire) pour projeter le solde de fin de mois.</td>
+              <td class="mono">V1.1</td>
+            </tr>
+            <tr>
+              <td><strong>Multi-utilisateur & auth</strong></td>
+              <td>Inscription, connexion, isolation des données par compte, gestion de session sécurisée.</td>
+              <td class="mono">Phase 2</td>
+            </tr>
+            <tr>
+              <td><strong>Comptes partagés / foyer</strong></td>
+              <td>Regrouper plusieurs utilisateurs dans un foyer avec budgets et vues partagés, transactions privées possibles.</td>
+              <td class="mono">Phase 2</td>
+            </tr>
+            <tr>
+              <td><strong>Connexion bancaire automatique</strong></td>
+              <td>Synchronisation des comptes via agrégateur DSP2, import et catégorisation automatique des transactions.</td>
+              <td class="mono">Phase 3</td>
+            </tr>
+            <tr>
+              <td><strong>Catégorisation automatique</strong></td>
+              <td>Règles puis apprentissage progressif pour proposer une catégorie à chaque transaction importée.</td>
+              <td class="mono">Phase 3</td>
+            </tr>
+            <tr>
+              <td><strong>Application mobile native</strong></td>
+              <td>Application iOS/Android avec saisie rapide, notifications de dépassement de budget, biométrie.</td>
+              <td class="mono">Phase 3</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="donnees" class="wide">
+      <span class="section-number">04</span>
+      <h2>Modèle de données</h2>
+      <p class="lead" style="max-width:65ch">Le schéma inclut <code class="inline">user_id</code> et un identifiant de <code class="inline">household</code> (foyer) dès le MVP, même si un seul utilisateur existe au départ — c'est ce qui rend le passage au multi-utilisateur indolore.</p>
+
+      <div class="schema-grid">
+        <div class="entity">
+          <div class="entity-head">users <span class="n">MVP</span></div>
+          <ul>
+            <li class="pk"><span class="field-name">id</span><span class="field-type">uuid</span></li>
+            <li><span class="field-name">email</span><span class="field-type">text</span></li>
+            <li><span class="field-name">password_hash</span><span class="field-type">text</span></li>
+            <li><span class="field-name">display_name</span><span class="field-type">text</span></li>
+            <li class="fk"><span class="field-name">household_id</span><span class="field-type">uuid?</span></li>
+            <li><span class="field-name">created_at</span><span class="field-type">timestamptz</span></li>
+          </ul>
+        </div>
+
+        <div class="entity">
+          <div class="entity-head">households <span class="n">Phase 2</span></div>
+          <ul>
+            <li class="pk"><span class="field-name">id</span><span class="field-type">uuid</span></li>
+            <li><span class="field-name">name</span><span class="field-type">text</span></li>
+            <li><span class="field-name">created_at</span><span class="field-type">timestamptz</span></li>
+          </ul>
+        </div>
+
+        <div class="entity">
+          <div class="entity-head">accounts <span class="n">MVP</span></div>
+          <ul>
+            <li class="pk"><span class="field-name">id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">user_id</span><span class="field-type">uuid</span></li>
+            <li><span class="field-name">name</span><span class="field-type">text</span></li>
+            <li><span class="field-name">type</span><span class="field-type">enum</span></li>
+            <li><span class="field-name">currency</span><span class="field-type">char(3)</span></li>
+            <li><span class="field-name">balance_cents</span><span class="field-type">bigint</span></li>
+            <li><span class="field-name">is_manual</span><span class="field-type">bool</span></li>
+            <li class="fk"><span class="field-name">bank_connection_id</span><span class="field-type">uuid?</span></li>
+          </ul>
+        </div>
+
+        <div class="entity">
+          <div class="entity-head">categories <span class="n">MVP</span></div>
+          <ul>
+            <li class="pk"><span class="field-name">id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">user_id</span><span class="field-type">uuid?</span></li>
+            <li><span class="field-name">name</span><span class="field-type">text</span></li>
+            <li><span class="field-name">icon</span><span class="field-type">text</span></li>
+            <li class="fk"><span class="field-name">parent_id</span><span class="field-type">uuid?</span></li>
+            <li><span class="field-name">kind</span><span class="field-type">enum</span></li>
+          </ul>
+        </div>
+
+        <div class="entity">
+          <div class="entity-head">transactions <span class="n">MVP</span></div>
+          <ul>
+            <li class="pk"><span class="field-name">id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">account_id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">category_id</span><span class="field-type">uuid?</span></li>
+            <li><span class="field-name">amount_cents</span><span class="field-type">bigint</span></li>
+            <li><span class="field-name">occurred_at</span><span class="field-type">date</span></li>
+            <li><span class="field-name">note</span><span class="field-type">text?</span></li>
+            <li><span class="field-name">is_recurring</span><span class="field-type">bool</span></li>
+            <li><span class="field-name">source</span><span class="field-type">enum</span></li>
+            <li><span class="field-name">external_id</span><span class="field-type">text?</span></li>
+          </ul>
+        </div>
+
+        <div class="entity">
+          <div class="entity-head">budgets <span class="n">MVP</span></div>
+          <ul>
+            <li class="pk"><span class="field-name">id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">user_id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">category_id</span><span class="field-type">uuid</span></li>
+            <li><span class="field-name">period</span><span class="field-type">enum</span></li>
+            <li><span class="field-name">limit_cents</span><span class="field-type">bigint</span></li>
+            <li><span class="field-name">starts_on</span><span class="field-type">date</span></li>
+          </ul>
+        </div>
+
+        <div class="entity">
+          <div class="entity-head">bank_connections <span class="n">Phase 3</span></div>
+          <ul>
+            <li class="pk"><span class="field-name">id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">user_id</span><span class="field-type">uuid</span></li>
+            <li><span class="field-name">provider</span><span class="field-type">enum</span></li>
+            <li><span class="field-name">provider_item_id</span><span class="field-type">text</span></li>
+            <li><span class="field-name">status</span><span class="field-type">enum</span></li>
+            <li><span class="field-name">last_synced_at</span><span class="field-type">timestamptz</span></li>
+          </ul>
+        </div>
+
+        <div class="entity">
+          <div class="entity-head">recurring_rules <span class="n">V1.1</span></div>
+          <ul>
+            <li class="pk"><span class="field-name">id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">account_id</span><span class="field-type">uuid</span></li>
+            <li class="fk"><span class="field-name">category_id</span><span class="field-type">uuid</span></li>
+            <li><span class="field-name">amount_cents</span><span class="field-type">bigint</span></li>
+            <li><span class="field-name">frequency</span><span class="field-type">enum</span></li>
+            <li><span class="field-name">next_occurrence</span><span class="field-type">date</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <strong>Note de conception.</strong> Les montants sont stockés en centimes (<code class="inline">bigint</code>), jamais en flottant — évite toute dérive d'arrondi sur des agrégations financières. La devise est portée par le compte, pas par la transaction, pour rester simple tant qu'il n'y a pas de multi-devises par compte.
+      </div>
+    </section>
+
+    <section id="architecture" class="wide">
+      <span class="section-number">05</span>
+      <h2>Architecture</h2>
+      <p class="lead" style="max-width:65ch">Architecture en couches classique, pensée pour rester un monolithe modulaire tant que l'échelle ne justifie pas des services séparés — la complexité des microservices n'apporte rien à ce stade.</p>
+
+      <div class="stack">
+        <div class="stack-layer">
+          <span class="layer-label">Client</span>
+          <div class="layer-body">
+            <span class="tech">App web (React) + app mobile (React Native/Expo)</span>
+            <span class="why">Un seul langage, logique métier partagée côté client (formatage, validation).</span>
+          </div>
+        </div>
+        <div class="stack-layer">
+          <span class="layer-label">API</span>
+          <div class="layer-body">
+            <span class="tech">API REST/JSON, authentification par session ou JWT</span>
+            <span class="why">Point d'entrée unique consommé par web et mobile de la même façon.</span>
+          </div>
+        </div>
+        <div class="stack-layer">
+          <span class="layer-label">Domaine</span>
+          <div class="layer-body">
+            <span class="tech">Modules : comptes, transactions, budgets, agrégation bancaire</span>
+            <span class="why">Isolation claire pour pouvoir extraire un module en service plus tard si besoin.</span>
+          </div>
+        </div>
+        <div class="stack-layer">
+          <span class="layer-label">Données</span>
+          <div class="layer-body">
+            <span class="tech">PostgreSQL, isolation par <code class="inline">user_id</code> (Row-Level Security)</span>
+            <span class="why">RLS Postgres empêche structurellement une fuite de données entre utilisateurs, même en cas de bug applicatif.</span>
+          </div>
+        </div>
+        <div class="stack-layer">
+          <span class="layer-label">Intégrations</span>
+          <div class="layer-body">
+            <span class="tech">Agrégateur bancaire DSP2 (Phase 3), file d'attente pour la synchronisation</span>
+            <span class="why">Les webhooks/synchronisations bancaires sont asynchrones par nature.</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>Pourquoi un monolithe modulaire</h3>
+      <p>À l'échelle d'un usage personnel puis de quelques milliers d'utilisateurs, un monolithe bien structuré (modules séparés par domaine métier, frontières claires) est plus rapide à développer et à faire évoluer qu'une architecture microservices. La séparation en services ne se justifiera que si un module a des besoins d'échelle ou de déploiement radicalement différents des autres — ce n'est pas le cas ici, y compris à l'échelle multi-utilisateur envisagée.</p>
+    </section>
+
+    <section id="stack" class="wide">
+      <span class="section-number">06</span>
+      <h2>Stack technique proposée</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Couche</th>
+              <th>Choix proposé</th>
+              <th>Justification</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">Frontend web</td>
+              <td>React + TypeScript, Vite</td>
+              <td>Écosystème mature, partage de types avec le backend si Node.</td>
+            </tr>
+            <tr>
+              <td class="mono">Frontend mobile</td>
+              <td>React Native (Expo)</td>
+              <td>Réutilisation de la logique et des composants avec le web, un seul socle JS/TS.</td>
+            </tr>
+            <tr>
+              <td class="mono">Backend</td>
+              <td>Node.js + TypeScript (NestJS ou Fastify)</td>
+              <td>Un seul langage sur toute la stack ; types partagés entre client et serveur ; NestJS structure bien les modules par domaine.</td>
+            </tr>
+            <tr>
+              <td class="mono">Base de données</td>
+              <td>PostgreSQL</td>
+              <td>Row-Level Security native pour l'isolation multi-utilisateur, fiabilité transactionnelle nécessaire aux données financières.</td>
+            </tr>
+            <tr>
+              <td class="mono">ORM</td>
+              <td>Prisma ou Drizzle</td>
+              <td>Migrations versionnées, typage fort du schéma.</td>
+            </tr>
+            <tr>
+              <td class="mono">Authentification</td>
+              <td>Auth maison (Argon2 + sessions) ou Lucia/Auth.js</td>
+              <td>Éviter la dépendance à un fournisseur tiers non-EU tant que le multi-utilisateur n'est pas actif ; réévaluer en phase 2.</td>
+            </tr>
+            <tr>
+              <td class="mono">Hébergement</td>
+              <td>Fournisseur EU (OVH, Scaleway) ou Fly.io/Render</td>
+              <td>Données financières de résidents européens : privilégier un hébergement UE pour simplifier la conformité RGPD.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Ce choix n'est pas figé.</strong> C'est une proposition de départ cohérente avec « un seul langage partout, Postgres pour la fiabilité transactionnelle ». On peut en discuter avant de coder quoi que ce soit.
+      </div>
+    </section>
+
+    <section id="banque">
+      <span class="section-number">07</span>
+      <h2>Connexion bancaire (Phase 3)</h2>
+      <p>Pour la France/Europe, deux agrégateurs DSP2 dominent le marché et sont utilisables par un développeur indépendant :</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <h4>Powens (ex-Budget Insight)</h4>
+          <p>Acteur français historique, large couverture des banques françaises et européennes, offre développeur avec sandbox gratuite.</p>
+        </div>
+        <div class="card">
+          <h4>Bridge (Bankin')</h4>
+          <p>Alternative française, bonne documentation, utilisé par de nombreuses fintechs. Offre gratuite limitée pour démarrer.</p>
+        </div>
+      </div>
+
+      <p>Les deux exposent une API REST : un flux d'autorisation où l'utilisateur connecte sa banque via une interface hébergée par le prestataire (l'app ne voit jamais les identifiants bancaires), puis un accès aux comptes et transactions synchronisés. Le choix définitif se fera après un test de sandbox sur les deux, une fois la phase 2 stabilisée — pas de raison de trancher maintenant.</p>
+
+      <div class="callout warn">
+        <strong>Complexité sous-jacente.</strong> L'agrégation bancaire introduit de la gestion d'erreurs spécifique : ré-authentification périodique exigée par la banque, synchronisations qui échouent, transactions dupliquées à réconcilier. À ne pas sous-estimer dans l'estimation de la phase 3.
+      </div>
+    </section>
+
+    <section id="securite">
+      <span class="section-number">08</span>
+      <h2>Sécurité & conformité</h2>
+      <ul>
+        <li><strong>Chiffrement</strong> — TLS en transit, chiffrement au repos pour les données sensibles (identifiants de connexion bancaire notamment).</li>
+        <li><strong>Isolation des données</strong> — Row-Level Security Postgres dès le schéma initial, même mono-utilisateur, pour qu'il n'y ait rien à réécrire en phase 2.</li>
+        <li><strong>RGPD</strong> — droit à l'export et à la suppression des données dès le MVP ; c'est plus simple à intégrer tôt qu'à ajouter après coup.</li>
+        <li><strong>Secrets bancaires</strong> — jamais stockés côté application : l'agrégateur DSP2 gère l'authentification bancaire, l'app ne reçoit qu'un jeton d'accès.</li>
+        <li><strong>Mots de passe</strong> — hachage Argon2id, jamais de stockage en clair ni réversible.</li>
+      </ul>
+    </section>
+
+    <section id="roadmap" class="wide">
+      <span class="section-number">09</span>
+      <h2>Roadmap par phases</h2>
+
+      <div class="phase">
+        <div class="phase-head">
+          <h3>Phase 1 — MVP personnel</h3>
+          <span class="phase-tag">fondations</span>
+        </div>
+        <p>Un seul utilisateur (vous), saisie manuelle, web uniquement. Objectif : un outil quotidiennement utilisable, pas une démo.</p>
+        <ul>
+          <li>Comptes, catégories, transactions manuelles</li>
+          <li>Budgets par catégorie avec indicateur visuel de consommation</li>
+          <li>Tableau de bord + rapports de base (répartition, tendance mensuelle)</li>
+          <li>Schéma de données prêt pour le multi-utilisateur (RLS, <code class="inline">user_id</code> partout)</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <h3>Phase 2 — Multi-utilisateur</h3>
+          <span class="phase-tag">ouverture</span>
+        </div>
+        <p>Authentification complète, inscription autonome, isolation stricte des données, notion de foyer pour les usages partagés.</p>
+        <ul>
+          <li>Inscription / connexion / gestion de session</li>
+          <li>Foyers avec budgets et vues partagés</li>
+          <li>Transactions récurrentes et projection de fin de mois</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <h3>Phase 3 — Agrégation & mobile</h3>
+          <span class="phase-tag">automatisation</span>
+        </div>
+        <p>Connexion bancaire automatique et application mobile native, une fois le cœur fonctionnel stabilisé et éprouvé en usage réel.</p>
+        <ul>
+          <li>Intégration agrégateur DSP2 (Powens ou Bridge)</li>
+          <li>Catégorisation automatique des transactions importées</li>
+          <li>Application mobile React Native</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="decisions">
+      <span class="section-number">10</span>
+      <h2>Décisions ouvertes</h2>
+      <p class="lead" style="max-width:65ch">Points à trancher ensemble avant ou pendant l'implémentation — aucun ne bloque le démarrage du MVP.</p>
+      <ul>
+        <li>NestJS vs Fastify pour le backend — dépend du niveau de structure souhaité dès le départ.</li>
+        <li>Prisma vs Drizzle pour l'ORM — Drizzle plus proche du SQL, Prisma plus outillé.</li>
+        <li>Hébergement définitif — à choisir en fonction du budget et de la simplicité de déploiement souhaitée.</li>
+        <li>Powens vs Bridge pour l'agrégation bancaire — à tester en sandbox le moment venu.</li>
+      </ul>
+    </section>
+
+    <hr class="sep">
+    <footer>
+      Prochaine étape proposée : valider ou ajuster ce document, puis initialiser le dépôt et poser le schéma de base de données du MVP.
+    </footer>
+  </main>
+</div>

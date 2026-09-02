@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: budgetly
+      POSTGRES_USER: budgetly_migrator
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5433:5432"
+    volumes:
+      - budgetly_pgdata:/var/lib/postgresql/data
+
+volumes:
+  budgetly_pgdata:

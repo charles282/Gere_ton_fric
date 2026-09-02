@@ -771,8 +771,8 @@ footer{
             </tr>
             <tr>
               <td class="mono">Backend</td>
-              <td>Node.js + TypeScript (NestJS ou Fastify)</td>
-              <td>Un seul langage sur toute la stack ; types partagés entre client et serveur ; NestJS structure bien les modules par domaine.</td>
+              <td>Node.js + TypeScript (NestJS)</td>
+              <td>Un seul langage sur toute la stack ; types partagés entre client et serveur ; structure modulaire imposée (DI, guards, pipes) qui colle à l'isolation par domaine et à l'évolution multi-phase prévue.</td>
             </tr>
             <tr>
               <td class="mono">Base de données</td>
@@ -781,8 +781,8 @@ footer{
             </tr>
             <tr>
               <td class="mono">ORM</td>
-              <td>Prisma ou Drizzle</td>
-              <td>Migrations versionnées, typage fort du schéma.</td>
+              <td>Drizzle</td>
+              <td>Proche du SQL, laisse la main sur les policies RLS et l'injection du contexte <code class="inline">user_id</code> par requête — Prisma écarté car son support RLS demande des contournements.</td>
             </tr>
             <tr>
               <td class="mono">Authentification</td>
@@ -791,15 +791,15 @@ footer{
             </tr>
             <tr>
               <td class="mono">Hébergement</td>
-              <td>Fournisseur EU (OVH, Scaleway) ou Fly.io/Render</td>
-              <td>Données financières de résidents européens : privilégier un hébergement UE pour simplifier la conformité RGPD.</td>
+              <td>Fly.io (API + PostgreSQL sur VM)</td>
+              <td>Free tier pour démarrer, région EU (Paris/CDG) disponible pour la conformité RGPD. Postgres auto-géré sur la VM (pas de service managé gratuit) : backups à mettre en place soi-même.</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <div class="callout">
-        <strong>Ce choix n'est pas figé.</strong> C'est une proposition de départ cohérente avec « un seul langage partout, Postgres pour la fiabilité transactionnelle ». On peut en discuter avant de coder quoi que ce soit.
+        <strong>Statut.</strong> Backend, ORM et hébergement sont tranchés (2026-08-31). Reste ouvert : le choix définitif d'auth et le fournisseur d'agrégation bancaire (phase 3).
       </div>
     </section>
 
@@ -888,9 +888,10 @@ footer{
       <h2>Décisions ouvertes</h2>
       <p class="lead" style="max-width:65ch">Points à trancher ensemble avant ou pendant l'implémentation — aucun ne bloque le démarrage du MVP.</p>
       <ul>
-        <li>NestJS vs Fastify pour le backend — dépend du niveau de structure souhaité dès le départ.</li>
-        <li>Prisma vs Drizzle pour l'ORM — Drizzle plus proche du SQL, Prisma plus outillé.</li>
-        <li>Hébergement définitif — à choisir en fonction du budget et de la simplicité de déploiement souhaitée.</li>
+        <li><s>NestJS vs Fastify pour le backend</s> — tranché : NestJS (2026-08-31).</li>
+        <li><s>Prisma vs Drizzle pour l'ORM</s> — tranché : Drizzle, pour la compatibilité RLS (2026-08-31).</li>
+        <li><s>Hébergement définitif</s> — tranché : Fly.io, API + Postgres sur VM (2026-08-31).</li>
+        <li>Auth maison (Argon2id + sessions) vs Lucia/Auth.js — à trancher avant la phase 2.</li>
         <li>Powens vs Bridge pour l'agrégation bancaire — à tester en sandbox le moment venu.</li>
       </ul>
     </section>
